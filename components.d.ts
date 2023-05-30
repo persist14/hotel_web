@@ -12,6 +12,5 @@ declare module '@vue/runtime-core' {
     CusInput: typeof import('./src/components/cusInput.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    VanButton: typeof import('vant/es')['Button']
   }
 }

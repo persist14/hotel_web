@@ -9,21 +9,15 @@
 <template>
 	<div class="input-container" >
 		<input :type="props.opts.types" @input="getVal($event)" class="input" />
+		<img src="@/assets/imgs/eyes.png" alt="" class="suffix" v-if="props.opts.suffix" @click="reviewPwd" >
 	</div>
 </template>
 
 <script setup lang="ts">
-interface InputOpts {
-	types: string;
-	preffix?: boolean;
-	suffix?: boolean;
-}
-interface EmitEvent {
-	(e: "getInputValue", val: string): void;
-}
-const props = defineProps<{
-	opts: InputOpts;
-}>();
+import { EmitEvent } from '@/models/componentValid'
+import { PropOpts } from '@/models/login'
+
+const props = defineProps<PropOpts>();
 
 const $emit = defineEmits<EmitEvent>();
 
@@ -31,11 +25,17 @@ const $emit = defineEmits<EmitEvent>();
 const getVal = (e: any) => {
 	$emit("getInputValue", e.currentTarget.value);
 };
+
+// 修改input类型
+const reviewPwd = () => {
+	$emit('updateInputType')
+}
 </script>
 
 <style scoped lang="scss">
 .input-container {
     height: 100%;
+	position: relative;
 }
 .input {
 	width: 100%;
@@ -48,5 +48,11 @@ const getVal = (e: any) => {
 	padding-left: 2rem;
 	font-size: 1.6rem;
     box-sizing: border-box;
+}
+.suffix {
+	position: absolute;
+	right: 1rem;
+	top: 2rem;
+	
 }
 </style>
