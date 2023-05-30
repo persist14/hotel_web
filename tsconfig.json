@@ -1,0 +1,42 @@
+{
+	"compilerOptions": {
+		// 解决__dirname 报错问题 以及 vue不识别引入.vue文件问题
+		"types": ["node"],
+		"target": "ES2020",
+		"useDefineForClassFields": true,
+		"module": "ESNext",
+		"lib": ["ES2020", "DOM", "DOM.Iterable"],
+		"skipLibCheck": true,
+
+		/* Bundler mode */
+		"moduleResolution": "bundler",
+		"allowImportingTsExtensions": true,
+		"resolveJsonModule": true,
+		"isolatedModules": true,
+		"noEmit": true,
+		"jsx": "preserve",
+
+		/* Linting */
+		"strict": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"noFallthroughCasesInSwitch": true,
+		"baseUrl": "./", // @基础路径
+		// @代表路径
+		"paths": {
+			"@/*": ["src/*"]
+		}
+	},
+	// 配置@识别的文件
+	"include": [
+		"src/**/*.ts",
+		"src/**/*.d.ts",
+		"src/**/*.tsx",
+		"src/**/*.vue",
+		"src/untils/baiduMap.js",
+		"src/untils/debuonce.js",
+		"**/*.ts",
+		"**/*.tsx"
+	],
+	"references": [{ "path": "./tsconfig.node.json" }]
+}
