@@ -1,52 +1,73 @@
+<!--
+ * @Description: 
+ * @Author: 
+ * @Date: 2023-05-31 08:41:08
+ * @LastEditTime: 2023-05-31 14:10:08
+ * @LastEditors: Please set LastEditors
+ * @Reference: 
+-->
 <template>
 	<div class="container">
 		<div class="back">
-			<img src="@/assets/imgs/back-arrow.png" alt="" />
+			<nav-bar> </nav-bar>
 		</div>
 		<p class="login-text">登录</p>
 		<div class="valid-alert">账号或密码错误</div>
-		<div class="card" >
+		<div class="card">
 			<!-- 用户输入区域 -->
-		<div class="input-card">
-			<cus-input
-				:opts="userInputOpts"
-				@get-input-value="getUserCode"></cus-input>
+			<div class="input-card">
+				<cus-input
+					:opts="userInputOpts"
+					@get-input-value="getUserCode"></cus-input>
+			</div>
+			<div class="input-card">
+				<cus-input
+					:opts="userPasswordOpts"
+					@get-input-value="getPassword"
+					@update-input-type="updateInputType"></cus-input>
+			</div>
+			<!-- 忘记密码 -->
+			<div class="forget">忘记密码？</div>
 		</div>
-		<div class="input-card" >
-			<cus-input
-				:opts="userPasswordOpts"
-				@get-input-value="getPassword" @update-input-type="updateInputType" ></cus-input>
-		</div>
-		<!-- 忘记密码 -->
-		<div class="forget">忘记密码？</div>
-		</div>
-		<button class="loginBtn" >登录</button>
-		<div class="footer" >
-			<span>还没有账号？ </span><span class="register" >注册</span>
+		<button class="loginBtn">登录</button>
+		<div class="footer">
+			<span>还没有账号？ </span
+			><span class="register" @click="toRegister">注册</span>
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
 import cusInput from "@/components/cusInput.vue";
+import navBar from "@/components/navBar.vue";
 import { ref, Ref, reactive } from "vue";
-import { InputOpts } from '@/models/login'
+import { useRouter } from "vue-router";
+import { InputOpts } from "@/models/login";
+const $router = useRouter();
+
 // 用户名
 const userInputOpts = reactive<InputOpts>({
-	types: 'text',
-	suffix: false, 
-	preffix: false
-})
+	types: "text",
+	suffix: false,
+	preffix: false,
+	prompt: "请输入账号"
+});
 // 密码
 const userPasswordOpts = reactive<InputOpts>({
-	types: 'password', 
-	suffix: true, 
-	preffix: false
-})
+	types: "password",
+	suffix: true,
+	preffix: false,
+	prompt: "请输入密码"
+});
 // 修改input类型
 const updateInputType = () => {
-	userPasswordOpts.types = userPasswordOpts.types === 'password' ? 'text' : 'password'
-}
+	userPasswordOpts.types =
+		userPasswordOpts.types === "password" ? "text" : "password";
+};
+// 注册
+const toRegister = () => {
+	$router.push("/register");
+};
 const userCode: Ref = ref("");
 
 const getUserCode = (val: string) => {
@@ -54,8 +75,7 @@ const getUserCode = (val: string) => {
 };
 const getPassword = (val: string) => {
 	console.log(val);
-	
-}
+};
 </script>
 
 <style scoped lang="scss">
@@ -106,7 +126,7 @@ const getPassword = (val: string) => {
 			font-family: PingFangSC-regular;
 		}
 		span.register {
-			color: #36CFC9;
+			color: #36cfc9;
 		}
 	}
 }
