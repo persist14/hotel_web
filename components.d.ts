@@ -13,6 +13,8 @@ declare module '@vue/runtime-core' {
     NavBar: typeof import('./src/components/navBar.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    VanCalendar: typeof import('vant/es')['Calendar']
+    VanRate: typeof import('vant/es')['Rate']
     VanTabbar: typeof import('vant/es')['Tabbar']
     VanTabbarItem: typeof import('vant/es')['TabbarItem']
   }

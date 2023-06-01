@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: 
  * @Date: 2023-05-31 10:10:12
- * @LastEditTime: 2023-05-31 17:32:04
+ * @LastEditTime: 2023-06-01 18:04:47
  * @LastEditors: Please set LastEditors
  * @Reference: 
 -->
@@ -20,8 +20,10 @@
 			<!-- 条件筛选 -->
 			<div class="filter">
 				<div class="date">
-					<p class="title">选择日期</p>
-					<p class="showInfo">12 3月 - 22 3月</p>
+					<p class="title" @click="showDateRange = true">选择日期</p>
+					<div class="showInfo">
+						{{ startTime + "-" + endTime }}
+					</div>
 				</div>
 				<div class="split"></div>
 				<div class="rooms">
@@ -61,14 +63,53 @@
 		<!-- 最实惠的价格 -->
 		<div class="benefit-price">
 			<p>最实惠的价格</p>
-			<div class="benefit-items" v-for="item in 10" :key="item"></div>
+			<div class="benefit-items" v-for="item in 10" :key="item">
+				<div class="benefit-left">
+					<img src="@/assets/imgs/test3.png" alt="" />
+				</div>
+				<div class="benefit-right">
+					<div class="right-top">
+						<p class="title">香格里拉酒店</p>
+						<span class="area">朝阳区, 北京</span>
+					</div>
+					<div class="right-footer">
+						<div class="footer-top">
+							<div class="distance">
+								<img src="@/assets/imgs/location.png" alt="" />
+								距离2km
+							</div>
+							<div class="price">￥1080</div>
+						</div>
+						<div class="footer-bot">
+							<div class="estimate">
+								<van-rate
+									v-model="rateVal"
+									size="1.6rem"
+									color="#13C2C2"
+									readonly />
+							</div>
+							<div class="night">/每晚</div>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
+
+		<!-- 日期选择器 -->
+		<van-calendar
+			v-model:show="showDateRange"
+			type="range"
+			:poppable="true"
+			color="#13C2C2"
+			lazy-render
+			@confirm="onConfirmRange($event)" />
 	</div>
 </template>
 
 <script setup lang="ts">
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
 import cusInput from "@/components/cusInput.vue";
+import M from "moment";
 import { InputOpts } from "@/models/login";
 
 const searchInput = reactive<InputOpts>({
@@ -77,6 +118,16 @@ const searchInput = reactive<InputOpts>({
 	prompt: "",
 	shadow: "0px 2px 19px 0px rgba(0, 0, 0, 0.13)"
 });
+const rateVal = ref<number>(2.5);
+let showDateRange = ref<boolean>(false);
+// 定义开始结束日期
+let startTime = ref<string>(M().format("MM DD[日]"));
+let endTime = ref<string>(M().add(7, "days").format("MM DD[日]"));
+const onConfirmRange = (e: Date[]) => {
+	startTime.value = M(e[0]).format("MM DD[日]");
+	endTime.value = M(e[1]).format("MM DD[日]");
+	showDateRange.value = false;
+};
 </script>
 
 <style scoped lang="scss">
@@ -246,8 +297,88 @@ const searchInput = reactive<InputOpts>({
 			width: 100%;
 			height: 14rem;
 			border-radius: 1rem;
-			background-color: red;
+			background-color: #fff;
+			display: flex;
+			.benefit-left {
+				width: 14rem;
+
+				img {
+					width: 100%;
+					height: 100%;
+				}
+			}
+			.benefit-right {
+				padding: 1rem;
+				flex: 1;
+				.right-top {
+					display: flex;
+					flex-direction: column;
+					justify-content: flex-start;
+					.title {
+						font-size: 1.8rem;
+						font-family: PingFangSC-bold;
+						margin-top: 0.3rem;
+					}
+					.area {
+						margin-top: 0.6rem;
+						font-size: 1.4rem;
+						color: rgba(191, 191, 191, 1);
+					}
+				}
+				.right-footer {
+					margin-top: 2.5rem;
+					font-size: 1.3rem;
+					.footer-top,
+					.footer-bot {
+						display: flex;
+						justify-content: space-between;
+						align-items: center;
+					}
+					.price,
+					.night {
+						font-family: PingFangSC-bold;
+						font-size: 1.4rem;
+					}
+					.footer-top {
+						.distance {
+							display: flex;
+							align-items: center;
+							color: rgba(191, 191, 191, 1);
+						}
+
+						img {
+							width: 2rem;
+							height: 2rem;
+							vertical-align: middle;
+						}
+					}
+					.footer-bot {
+						margin-top: 0.6rem;
+					}
+				}
+			}
 		}
+	}
+	::v-deep .van-calendar__day--start,
+	::v-deep .van-calendar__day--end {
+		width: 5.3rem;
+		height: 5.3rem;
+		border-radius: 50%;
+	}
+	::v-deep .van-calendar__day--start {
+		border-top-right-radius: 0;
+		border-bottom-right-radius: 0;
+	}
+	::v-deep .van-calendar__day--end {
+		border-top-left-radius: 0;
+		border-bottom-left-radius: 0;
+	}
+	::v-deep .van-calendar__day--middle {
+		width: 5.3rem;
+		height: 5.3rem;
+		background-color: #13c2c2;
+		color: #fff !important;
+		border: none !important;
 	}
 }
 </style>
