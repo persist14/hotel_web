@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: 
  * @Date: 2023-05-31 10:10:12
- * @LastEditTime: 2023-06-01 18:04:47
+ * @LastEditTime: 2023-06-02 11:17:10
  * @LastEditors: Please set LastEditors
  * @Reference: 
 -->
@@ -27,8 +27,8 @@
 				</div>
 				<div class="split"></div>
 				<div class="rooms">
-					<p class="title">房间数</p>
-					<p class="showInfo">1间 - 2人</p>
+					<p class="title" @click="showRoomModal = true">房间数</p>
+					<p class="showInfo">{{ rooms.counts }}间 - {{ rooms.adult + rooms.minor }}人</p>
 				</div>
 			</div>
 			<!-- 搜搜 -->
@@ -100,9 +100,67 @@
 			v-model:show="showDateRange"
 			type="range"
 			:poppable="true"
-			color="#13C2C2"
+			color="#13c2c2"
 			lazy-render
-			@confirm="onConfirmRange($event)" />
+			@confirm="onConfirmRange($event)"
+			:formatter="coustomCon" />
+		<!-- 房间人数弹层 -->
+		<van-popup
+			v-model:show="showRoomModal"
+			round
+			:style="{
+				padding: '0 2.6rem',
+				width: '33.6rem',
+				height: '37.6rem'
+			}">
+			<!-- 房间数 -->
+			<div class="popup-card">
+				<div class="title">房间数</div>
+				<div class="counter">
+					<img
+						src="@/assets/imgs/dec.png"
+						alt=""
+						@click="changeRooms('desc', 'counts')" />
+					<div>{{ rooms.counts }}</div>
+					<img
+						src="@/assets/imgs/add.png"
+						alt=""
+						@click="changeRooms('incr', 'counts')" />
+				</div>
+			</div>
+			<!-- 成年人 -->
+			<div class="popup-card">
+				<div class="title">成年人</div>
+				<div class="counter">
+					<img
+						src="@/assets/imgs/dec.png"
+						alt=""
+						@click="changeRooms('desc', 'adult')" />
+					<div>{{ rooms.adult }}</div>
+					<img
+						src="@/assets/imgs/add.png"
+						alt=""
+						@click="changeRooms('incr', 'adult')" />
+				</div>
+			</div>
+			<!-- 未成年 -->
+			<div class="popup-card">
+				<div class="title">未成年人</div>
+				<div class="counter">
+					<img
+						src="@/assets/imgs/dec.png"
+						alt=""
+						@click="changeRooms('desc', 'minor')" />
+					<div>{{ rooms.minor }}</div>
+					<img
+						src="@/assets/imgs/add.png"
+						alt=""
+						@click="changeRooms('incr', 'minor')" />
+				</div>
+			</div>
+			<!-- 弹框 -->
+			<button class="card-footer" @click="confirmRooms" >确定</button>
+		</van-popup>
 	</div>
 </template>
 
@@ -111,6 +169,7 @@ import { reactive, ref } from "vue";
 import cusInput from "@/components/cusInput.vue";
 import M from "moment";
 import { InputOpts } from "@/models/login";
+import type { CalendarDayItem } from "vant";
 
 const searchInput = reactive<InputOpts>({
 	types: "text",
@@ -118,16 +177,47 @@ const searchInput = reactive<InputOpts>({
 	prompt: "",
 	shadow: "0px 2px 19px 0px rgba(0, 0, 0, 0.13)"
 });
+const rooms = reactive({
+	counts: 0,
+	adult: 0,
+	minor: 0
+});
 const rateVal = ref<number>(2.5);
+// 显示日期选择器
 let showDateRange = ref<boolean>(false);
+// 显示房间人数弹框
+let showRoomModal = ref<boolean>(false);
 // 定义开始结束日期
 let startTime = ref<string>(M().format("MM DD[日]"));
 let endTime = ref<string>(M().add(7, "days").format("MM DD[日]"));
+// 获取日期范围
 const onConfirmRange = (e: Date[]) => {
 	startTime.value = M(e[0]).format("MM DD[日]");
 	endTime.value = M(e[1]).format("MM DD[日]");
 	showDateRange.value = false;
 };
+const changeRooms = (
+	type: "desc" | "incr",
+	key: "counts" | "adult" | "minor"
+) => {
+	// 最少问0间
+	if (type === "desc" && rooms[key] === 0) return;
+	type === "incr" ? (rooms[key] += 1) : rooms[key]--;
+};
+// 自定义范围选择器文案
+const coustomCon = (day: CalendarDayItem): CalendarDayItem => {
+	if (day.type === "start") {
+		day.bottomInfo = "入住";
+	} else if (day.type === "end") {
+		day.bottomInfo = "离店";
+	}
+	return day;
+};
+
+// 弹框确定按钮
+const confirmRooms = () => {
+    showRoomModal.value = false
+}
 </script>
 
 <style scoped lang="scss">
@@ -359,26 +449,71 @@ const onConfirmRange = (e: Date[]) => {
 			}
 		}
 	}
-	::v-deep .van-calendar__day--start,
-	::v-deep .van-calendar__day--end {
-		width: 5.3rem;
-		height: 5.3rem;
-		border-radius: 50%;
+
+	:deep(.van-calendar__days) {
+		.van-calendar__day--middle {
+			width: 5.3rem;
+			height: 5.3rem;
+			background-color: #13c2c2;
+			color: #fff !important;
+			border: none !important;
+		}
+		.van-calendar__day--start,
+		.van-calendar__day--end {
+			width: 5.3rem;
+			height: 5.3rem;
+			border-radius: 50%;
+		}
+		.van-calendar__day--start {
+			border-top-right-radius: 0;
+			border-bottom-right-radius: 0;
+		}
+		.van-calendar__day--end {
+			border-top-left-radius: 0;
+			border-bottom-left-radius: 0;
+		}
 	}
-	::v-deep .van-calendar__day--start {
-		border-top-right-radius: 0;
-		border-bottom-right-radius: 0;
+	:deep(.popup-card) {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		font-size: 1.3rem;
+		height: 8.4rem;
+		border-bottom: 1px solid rgba(245, 245, 245, 1);
+		.title {
+		}
+		.counter {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			width: 8.2rem;
+			height: 2.2rem;
+			line-height: 2.2rem;
+			img {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				width: 2.3rem;
+				height: 2.3rem;
+				border-radius: 50%;
+				box-sizing: border-box;
+				vertical-align: middle;
+				// img {
+				// 	width: 100%;
+				// 	height: 100%;
+				// }
+			}
+			div {
+				font-weight: 700;
+				font-size: 1.7rem;
+			}
+		}
 	}
-	::v-deep .van-calendar__day--end {
-		border-top-left-radius: 0;
-		border-bottom-left-radius: 0;
-	}
-	::v-deep .van-calendar__day--middle {
-		width: 5.3rem;
-		height: 5.3rem;
-		background-color: #13c2c2;
-		color: #fff !important;
-		border: none !important;
+	:deep(.card-footer) {
+		@include loginStyle;
+		margin-top: 3.3rem;
+		width: 100%;
+		height: 5rem;
 	}
 }
 </style>

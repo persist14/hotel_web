@@ -8,3 +8,10 @@ export declare interface InputOpts {
 export declare interface PropOpts {
 	opts: InputOpts
 }
+
+export declare interface UserOpts {
+	username: string,
+	password: string,
+	email?: string,
+	phone?: string
+}

@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: 
  * @Date: 2023-05-31 08:41:08
- * @LastEditTime: 2023-05-31 14:10:08
+ * @LastEditTime: 2023-06-02 14:23:25
  * @LastEditors: Please set LastEditors
  * @Reference: 
 -->
@@ -29,7 +29,7 @@
 			<!-- 忘记密码 -->
 			<div class="forget">忘记密码？</div>
 		</div>
-		<button class="loginBtn">登录</button>
+		<button class="loginBtn" @click="submit">登录</button>
 		<div class="footer">
 			<span>还没有账号？ </span
 			><span class="register" @click="toRegister">注册</span>
@@ -40,9 +40,10 @@
 <script setup lang="ts">
 import cusInput from "@/components/cusInput.vue";
 import navBar from "@/components/navBar.vue";
-import { ref, Ref, reactive } from "vue";
+import { reactive } from "vue";
 import { useRouter } from "vue-router";
-import { InputOpts } from "@/models/login";
+import { InputOpts, UserOpts } from "@/models/login";
+import { login } from "@/apis/user";
 const $router = useRouter();
 
 // 用户名
@@ -64,17 +65,25 @@ const updateInputType = () => {
 	userPasswordOpts.types =
 		userPasswordOpts.types === "password" ? "text" : "password";
 };
-// 注册
+// 注册页面
 const toRegister = () => {
 	$router.push("/register");
 };
-const userCode: Ref = ref("");
+const loginInfo = reactive<UserOpts>({
+	username: "",
+	password: ""
+});
 
 const getUserCode = (val: string) => {
-	userCode.value = val;
+	loginInfo.username = val;
 };
 const getPassword = (val: string) => {
-	console.log(val);
+	loginInfo.password = val;
+};
+
+// 登录按钮
+const submit = async () => {
+	await login(loginInfo);
 };
 </script>
 
