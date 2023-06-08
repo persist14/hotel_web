@@ -1,10 +1,10 @@
 <!--
- * @Description: 
- * @Author: 
+ * @Description:
+ * @Author:
  * @Date: 2023-06-08 16:41:31
  * @LastEditTime: 2023-06-08 17:46:08
  * @LastEditors: Please set LastEditors
- * @Reference: 
+ * @Reference:
 -->
 <template>
 	<div class="search-container">
@@ -16,9 +16,9 @@
 			</template>
 		</nav-bar>
 		<div class="search">
-			<cus-input :opts="searchInp"></cus-input>
+			<cus-input :opts="searchInp" @getInputValue="searchEvent" ></cus-input>
 		</div>
-		<div class="search-history">
+		<div class="search-history" v-if="showHistory" >
 			<div class="title">
 				<span>搜索历史</span>
 				<span class="all-del">删除全部</span>
@@ -36,12 +36,14 @@
 				</div>
 			</div>
 		</div>
+    <div v-else >
+      <List :list="xData.list" :total="xData.total" :loadding-status="xData.loadding" :refreshStatus="xData.refreshStatus" @loadDatas="getList" ></List>
+    </div>
 	</div>
 </template>
 
 <script setup lang="ts">
-import navBar from "@/components/navBar.vue";
-import { reactive } from "vue";
+import {reactive, ref} from "vue";
 import { InputOpts } from "@/models/login";
 const searchInp = reactive<InputOpts>({
 	shadow: "0rem .2rem 1.9rem 0rem rgba(0, 0, 0, 0.13)",
@@ -49,6 +51,47 @@ const searchInp = reactive<InputOpts>({
 	preffix: true,
 	types: "text"
 });
+
+// 搜索结果
+// 列表数据定义
+const xData = reactive({
+  list: [
+    {
+      title: "标题",
+      address: "陕西省西安市",
+      cap: "2",
+      price: 1000,
+      img: "123"
+    }
+  ],
+  total: 20,
+  loadding: ref<boolean>(false),
+  refreshStatus: ref<boolean>(false)
+});
+const searchContext = ref<string>('')
+const showHistory = ref<boolean>(true)
+// 获取搜索内容
+const searchEvent = (val: string) => {
+  searchContext.value = val
+  searchContext.value.length === 0 ? showHistory.value = true : showHistory.value = false
+}
+// 列表触底获取数据
+const getList = (page: number, refresh: boolean) => {
+  xData.loadding = true;
+  // 下拉刷新设置
+  if(refresh) xData.refreshStatus = refresh
+  setTimeout(() => {
+    xData.list.push({
+      title: "测试",
+      address: "科技路",
+      cap: "3",
+      price: 2000,
+      img: "xxx"
+    });
+    xData.loadding = false;
+    xData.refreshStatus ? xData.refreshStatus = false : ''
+  }, 1000);
+}
 </script>
 
 <style scoped lang="scss">
@@ -105,6 +148,7 @@ const searchInp = reactive<InputOpts>({
 					.title {
 						color: rgba(64, 64, 64, 1);
 						font-size: 1.6rem;
+            font-weight: 700;
 					}
 				}
 			}

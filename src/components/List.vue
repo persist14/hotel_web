@@ -1,14 +1,14 @@
 <!--
- * @Description: 
- * @Author: 
+ * @Description:
+ * @Author:
  * @Date: 2023-06-08 10:40:02
  * @LastEditTime: 2023-06-08 16:56:17
  * @LastEditors: Please set LastEditors
- * @Reference: 
+ * @Reference:
 -->
 <template>
 	<div>
-		<van-pull-refresh v-model="listOpts.refreshing" @refresh="onRefresh">
+		<van-pull-refresh v-model="props.refreshStatus" @refresh="onRefresh">
 			<van-list
 				v-model:loading="props.loaddingStatus"
 				:finished="listOpts.finished"
@@ -57,6 +57,7 @@ interface ListOpts {
 	list: ListItemOpts[];
 	total: number;
 	loaddingStatus: boolean;
+  refreshStatus: boolean
 }
 interface ListItemOpts {
 	title: string;
@@ -66,28 +67,28 @@ interface ListItemOpts {
 	img: string;
 }
 interface ListEmitEVents {
-	(e: "loadDatas", page: number): void;
+	(e: "loadDatas", page: number, refresh: boolean | undefined): void;
 }
 const props = defineProps<ListOpts>();
 const emits = defineEmits<ListEmitEVents>();
 const listOpts = reactive({
 	finished: false,
-	refreshing: false
+	refreshing: ref<boolean>(false)
 });
 let page = ref<number>(0);
 const rateVal = ref(5);
-const onLoad = async () => {
-	// listOpts.loadding = true;
+const onLoad = async (re?:boolean) => {
 	page.value = page.value + 1;
 	// 让父组件请求数据
-	emits("loadDatas", page.value);
+	emits("loadDatas", page.value, re);
+  // listOpts.refreshing = false
 	props.list.length > 30 ? (listOpts.finished = true) : "";
 };
 const onRefresh = () => {
 	// 清空列表数据
 	listOpts.finished = false;
 	// 重新加载数据
-    onLoad()
+    onLoad(true)
 };
 </script>
 
@@ -109,12 +110,13 @@ p {
 	font-family: PingFangSC-bold;
 }
 .benefit-items {
-	margin-top: 1.7rem;
-	width: 100%;
+	margin: .8rem auto;
+	width: 97%;
 	height: 14rem;
 	border-radius: 1rem;
 	background-color: #fff;
 	display: flex;
+  box-shadow:0 0rem 0.2rem 0.2rem rgba(0, 0, 0, 0.1);
 	.benefit-left {
 		width: 14rem;
 
