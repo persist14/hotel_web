@@ -1,16 +1,24 @@
+/*
+ * @Description:
+ * @Author:
+ * @Date: 2023-05-31 08:41:08
+ * @LastEditTime: 2023-06-08 17:27:06
+ * @LastEditors:
+ * @Reference:
+ */
 (function flexible(window, document) {
 	var docEl = document.documentElement;
 	var dpr = window.devicePixelRatio || 1;
 
 	// adjust body font size
-	function setBodyFontSize() {
-		if (document.body) {
-			document.body.style.fontSize = 12 * dpr + "px";
-		} else {
-			document.addEventListener("DOMContentLoaded", setBodyFontSize);
-		}
-	}
-	setBodyFontSize();
+	// function setBodyFontSize() {
+	// 	if (document.body) {
+	// 		document.body.style.fontSize = 12 * dpr + "px";
+	// 	} else {
+	// 		document.addEventListener("DOMContentLoaded", setBodyFontSize);
+	// 	}
+	// }
+	// setBodyFontSize();
 
 	// set 1rem = viewWidth / 10
 	function setRemUnit() {

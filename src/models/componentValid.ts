@@ -4,5 +4,9 @@ export declare interface EmitEvent {
 }
 
 export declare interface NavOpts {
-	title?: string
+	title?: string,
+	showBack?: {
+		type: boolean,
+		default: true
+	}
 }

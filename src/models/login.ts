@@ -4,6 +4,7 @@ export declare interface InputOpts {
 	suffix?: boolean;
 	prompt: string,
 	shadow?: string
+	isRead?: boolean
 }
 export declare interface PropOpts {
 	opts: InputOpts

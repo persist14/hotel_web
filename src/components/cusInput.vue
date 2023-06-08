@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: 
  * @Date: 2023-05-30 16:23:53
- * @LastEditTime: 2023-05-31 16:49:48
+ * @LastEditTime: 2023-06-08 17:11:24
  * @LastEditors: Please set LastEditors
  * @Reference: 
 -->
@@ -13,6 +13,7 @@
 			@input="getVal($event)"
 			class="input"
 			:placeholder="props.opts.prompt"
+            :readonly="props.opts.isRead ? true : false"
 			:style="{
 				paddingLeft: props.opts.preffix ? '5rem' : '2rem',
 				boxShadow: (props.opts.shadow && props.opts.shadow) || 'unset'
@@ -75,7 +76,8 @@ const reviewPwd = () => {
 	height: 2.4rem;
 	position: absolute;
 	left: 1.8rem;
-	top: 1.6rem;
+	top: 50%;
+	transform: translateY(-50%);
 }
 .suffix {
 	position: absolute;

@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: 
  * @Date: 2023-05-31 10:10:12
- * @LastEditTime: 2023-06-02 11:17:10
+ * @LastEditTime: 2023-06-08 17:12:25
  * @LastEditors: Please set LastEditors
  * @Reference: 
 -->
@@ -14,7 +14,7 @@
 		<p class="desc">你下一次想去哪？</p>
 		<div class="card">
 			<!-- 搜索 -->
-			<div class="search">
+			<div class="search" @click="$router.push('/search')">
 				<cus-input :opts="searchInput"></cus-input>
 			</div>
 			<!-- 条件筛选 -->
@@ -28,7 +28,9 @@
 				<div class="split"></div>
 				<div class="rooms">
 					<p class="title" @click="showRoomModal = true">房间数</p>
-					<p class="showInfo">{{ rooms.counts }}间 - {{ rooms.adult + rooms.minor }}人</p>
+					<p class="showInfo">
+						{{ rooms.counts }}间 - {{ rooms.adult + rooms.minor }}人
+					</p>
 				</div>
 			</div>
 			<!-- 搜搜 -->
@@ -63,35 +65,12 @@
 		<!-- 最实惠的价格 -->
 		<div class="benefit-price">
 			<p>最实惠的价格</p>
-			<div class="benefit-items" v-for="item in 10" :key="item">
-				<div class="benefit-left">
-					<img src="@/assets/imgs/test3.png" alt="" />
-				</div>
-				<div class="benefit-right">
-					<div class="right-top">
-						<p class="title">香格里拉酒店</p>
-						<span class="area">朝阳区, 北京</span>
-					</div>
-					<div class="right-footer">
-						<div class="footer-top">
-							<div class="distance">
-								<img src="@/assets/imgs/location.png" alt="" />
-								距离2km
-							</div>
-							<div class="price">￥1080</div>
-						</div>
-						<div class="footer-bot">
-							<div class="estimate">
-								<van-rate
-									v-model="rateVal"
-									size="1.6rem"
-									color="#13C2C2"
-									readonly />
-							</div>
-							<div class="night">/每晚</div>
-						</div>
-					</div>
-				</div>
+			<div>
+				<cus-list
+					:list="xData.list"
+					:total="xData.total"
+					:loadding-status="xData.loadding"
+					@load-datas="getList"></cus-list>
 			</div>
 		</div>
 
@@ -109,9 +88,9 @@
 			v-model:show="showRoomModal"
 			round
 			:style="{
-				padding: '0 2.6rem',
-				width: '33.6rem',
-				height: '37.6rem'
+				padding: '0 26rem',
+				width: '336rem',
+				height: '376rem'
 			}">
 			<!-- 房间数 -->
 			<div class="popup-card">
@@ -159,7 +138,7 @@
 				</div>
 			</div>
 			<!-- 弹框 -->
-			<button class="card-footer" @click="confirmRooms" >确定</button>
+			<button class="card-footer" @click="confirmRooms">确定</button>
 		</van-popup>
 	</div>
 </template>
@@ -170,19 +149,20 @@ import cusInput from "@/components/cusInput.vue";
 import M from "moment";
 import { InputOpts } from "@/models/login";
 import type { CalendarDayItem } from "vant";
+import cusList from "@/components/List.vue";
 
 const searchInput = reactive<InputOpts>({
 	types: "text",
 	preffix: true,
-	prompt: "",
-	shadow: "0px 2px 19px 0px rgba(0, 0, 0, 0.13)"
+	prompt: "你想去哪儿？",
+	shadow: "0rem .2rem 1.9rem 0rem rgba(0, 0, 0, 0.13)",
+	isRead: true
 });
 const rooms = reactive({
 	counts: 0,
 	adult: 0,
 	minor: 0
 });
-const rateVal = ref<number>(2.5);
 // 显示日期选择器
 let showDateRange = ref<boolean>(false);
 // 显示房间人数弹框
@@ -190,6 +170,20 @@ let showRoomModal = ref<boolean>(false);
 // 定义开始结束日期
 let startTime = ref<string>(M().format("MM DD[日]"));
 let endTime = ref<string>(M().add(7, "days").format("MM DD[日]"));
+// 列表数据定义
+const xData = reactive({
+	list: [
+		{
+			title: "标题",
+			address: "陕西省西安市",
+			cap: "2",
+			price: 1000,
+			img: "123"
+		}
+	],
+	total: 20,
+	loadding: ref<boolean>(false)
+});
 // 获取日期范围
 const onConfirmRange = (e: Date[]) => {
 	startTime.value = M(e[0]).format("MM DD[日]");
@@ -216,8 +210,23 @@ const coustomCon = (day: CalendarDayItem): CalendarDayItem => {
 
 // 弹框确定按钮
 const confirmRooms = () => {
-    showRoomModal.value = false
-}
+	showRoomModal.value = false;
+};
+// 获取数据
+const getList = (page: number) => {
+	console.log(page, "分页");
+	xData.loadding = true;
+	setTimeout(() => {
+		xData.list.push({
+			title: "测试",
+			address: "科技路",
+			cap: "3",
+			price: 2000,
+			img: "xxx"
+		});
+		xData.loadding = false;
+	}, 3000);
+};
 </script>
 
 <style scoped lang="scss">
@@ -237,7 +246,7 @@ const confirmRooms = () => {
 			width: 4rem;
 			border-radius: 50%;
 			overflow: hidden;
-			border: 1px solid #ccc;
+			border: 0.1rem solid #ccc;
 		}
 	}
 	.desc {
@@ -262,7 +271,7 @@ const confirmRooms = () => {
 			// justify-content: center;
 			margin-left: 2rem;
 			.split {
-				border-left: 1px solid rgba(233, 233, 233, 1);
+				border-left: 0.1rem solid rgba(233, 233, 233, 1);
 				margin: 0 3.9rem;
 			}
 			.date .title {
@@ -385,12 +394,12 @@ const confirmRooms = () => {
 		.benefit-items {
 			margin-top: 1.7rem;
 			width: 100%;
-			height: 14rem;
+			height: 1.4rem;
 			border-radius: 1rem;
 			background-color: #fff;
 			display: flex;
 			.benefit-left {
-				width: 14rem;
+				width: 1.4rem;
 
 				img {
 					width: 100%;
@@ -479,7 +488,7 @@ const confirmRooms = () => {
 		align-items: center;
 		font-size: 1.3rem;
 		height: 8.4rem;
-		border-bottom: 1px solid rgba(245, 245, 245, 1);
+		border-bottom: 0.1rem solid rgba(245, 245, 245, 1);
 		.title {
 		}
 		.counter {
