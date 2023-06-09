@@ -6,14 +6,15 @@
  * @LastEditors: Please set LastEditors
  * @Reference: 
  */
-import { createApp } from 'vue'
+import {createApp} from 'vue'
 import '@/assets/scss/base.scss'
 import App from '@/App.vue'
 import router from '@/routes/index'
-import { createPinia } from 'pinia'
+import {createPinia} from 'pinia'
 
 const pinia = createPinia()
 
 import "@/utils/rem.js";
+import '@/utils/loadMapApi.js'
 
 createApp(App).use(router).use(pinia).mount('#app')
