@@ -2,47 +2,62 @@
  * @Description: 
  * @Author: 
  * @Date: 2023-05-29 13:55:47
- * @LastEditTime: 2023-05-31 15:41:18
+ * @LastEditTime: 2023-06-16 14:34:16
  * @LastEditors: Please set LastEditors
  * @Reference: 
 -->
 <script lang="ts" setup>
-import {useAppStore} from "./stores/app";
-import {storeToRefs} from "pinia";
-import {useRouter} from "vue-router";
+import { useAppStore } from "./stores/app";
+import { storeToRefs } from "pinia";
+import { useRouter } from "vue-router";
 
 const store = useAppStore();
-const {hasTabbar, activeTab} = storeToRefs(store);
+const { hasTabbar, activeTab, posiInfo } = storeToRefs(store);
 const $router = useRouter();
 
+//获取经纬度
+navigator.geolocation.getCurrentPosition(
+	(pos) => {
+		store.$patch({
+			posiInfo: {
+				latitude: pos.coords.latitude,
+				longitude: pos.coords.longitude
+			}
+		});
+		console.log(posiInfo, ">>>>>>>>>>");
+	},
+	(err) => {
+		console.log(err);
+	}
+);
 const handlerChange = () => {
-  $router.push(`/${activeTab.value}`);
+	$router.push(`/${activeTab.value}`);
 };
 </script>
 <template>
-  <div class="root">
-    <router-view class="pages"></router-view>
-    <van-tabbar
-        v-if="hasTabbar"
-        v-model="activeTab"
-        fixed
-        @change="handlerChange">
-      <van-tabbar-item icon="search" name="dashboard">发现</van-tabbar-item>
-      <van-tabbar-item icon="like-o" name="travel">旅行</van-tabbar-item>
-      <van-tabbar-item icon="user-o" name="my">我的</van-tabbar-item>
-    </van-tabbar>
-  </div>
+	<div class="root">
+		<router-view class="pages"></router-view>
+		<van-tabbar
+			v-if="hasTabbar"
+			v-model="activeTab"
+			fixed
+			@change="handlerChange">
+			<van-tabbar-item icon="search" name="dashboard">发现</van-tabbar-item>
+			<van-tabbar-item icon="like-o" name="travel">旅行</van-tabbar-item>
+			<van-tabbar-item icon="user-o" name="my">我的</van-tabbar-item>
+		</van-tabbar>
+	</div>
 </template>
 
 <style scoped>
 .root {
-  width: 37.5rem;
-  height: 81.2rem;
-  --van-tabbar-item-active-color: #13c2c2;
-  --van-tabbar-item-active-background: transparent;
+	width: 37.5rem;
+	height: 81.2rem;
+	--van-tabbar-item-active-color: #13c2c2;
+	--van-tabbar-item-active-background: transparent;
 }
 
 .pages {
-  height: 100%;
+	height: 100%;
 }
 </style>

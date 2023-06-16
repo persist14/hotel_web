@@ -1,461 +1,492 @@
 <template>
-  <div class="detail-container">
-    <div class="top">
-      <nav-bar>
-        <template #rightSlot>
-          <div class="nav-icon">
-            <img alt="" src="@/assets/imgs/like2.png">
-          </div>
-        </template>
-      </nav-bar>
-    </div>
-    <!--  酒店信息  -->
-    <main class="main">
-      <div class="hotel-info">
-        <div class="left">
-          <p class="title">
-            Grand Royal
-            Park Hotel
-          </p>
-          <p class="footer">
-            <span class="address">巴塞罗那,西班牙</span>
-            <img alt="" class="location" src="@/assets/imgs/location.png">
-            <span class="cap">距离2km</span>
-          </p>
-        </div>
-        <div class="right">
-          <p class="price">￥1080</p>
-          <p class="night">/每晚</p>
-        </div>
-      </div>
-      <!--   酒店介绍   -->
-      <div class="hotel-intro">
-        <div class="title">
-          介绍
-        </div>
-        <div class="intro-cont">
-          <span v-if="!showMore">
-              {{ intro.length > 20 ? intro.slice(0, 20) + '...' : intro }} <span style="color: #44CECE;"
-                                                                                 @click="changeMore">查看更多</span>
-          </span>
-          <span v-else>
-            {{ intro }} <span style="color: #44CECE; " @click="changeMore">收起</span>
-          </span>
-        </div>
-      </div>
-      <!-- 酒店评分 -->
-      <div class="hotel-rate">
-        <div class="card-title">
-          <div class="rate">
-            9.2
-          </div>
-          <div class="rate-star">
-            <p class="rate-title">综合评分</p>
-            <van-rate
-                v-model="rateVal"
-                color="#13C2C2"
-                readonly
-                size="1rem"
-                void-color="#13C2C2"
-                void-icon="star-o"
-            />
-          </div>
-        </div>
-        <div class="card-cont">
-          <div class="room-rate">
-            <p class="room">
-              <span class="text"> 房间 </span>
-              <van-slider v-model="slider.room" active-color="#13C2C2" bar-height="0.8rem" button-size="0"
-                          inactive-color="transparent"
-              />
-            </p>
-            <p class="room">
-              <span class="text"> 服务 </span>
-              <van-slider v-model="slider.service" active-color="#13C2C2" bar-height="0.8rem" button-size="0"
-                          inactive-color="transparent"
-              />
-            </p>
-            <p class="room">
-              <span class="text"> 位置 </span>
-              <van-slider v-model="slider.pos" active-color="#13C2C2" bar-height="0.8rem" button-size="0"
-                          inactive-color="transparent"
-              />
-            </p>
-            <p class="room">
-              <span class="text"> 价格 </span>
-              <van-slider v-model="slider.price" active-color="#13C2C2" bar-height="0.8rem" button-size="0"
-                          inactive-color="transparent"
-              />
-            </p>
-          </div>
-        </div>
-      </div>
-      <!-- 酒店图片 -->
-      <div class="hotel-pic">
-        <div class="title">
-          照片
-        </div>
-        <div class="pics">
-          <img v-for="item in 10" :key="item" alt="" src="@/assets/imgs/test-hotel.png">
-
-
-        </div>
-      </div>
-      <!--  评论  -->
-      <div class="cmt">
-        <div class="title">
-          <div class="text">
-            评论（25）
-          </div>
-          <div class="view-cmts" @click="$router.push('/comment')">查看全部</div>
-        </div>
-        <div v-for="item in 3" :key="item" class="items">
-          <div class="cont-top">
-            <div class="users">
-              <div class="avatar">
-                <img alt="" src="@/assets/imgs/test2.png">
-              </div>
-              <div class="infos">
-                <span class="title">Daniel Hua</span>
-                <span class="time">刚才</span>
-              </div>
-            </div>
-            <div class="rates">
-              <span>8.0</span>
-              <div>
-                <van-rate
-                    v-model="rateVal"
-                    color="#13C2C2"
-                    readonly
-                    size="1rem"
-                    void-color="#13C2C2"
-                    void-icon="star-o"
-                />
-              </div>
-            </div>
-          </div>
-          <div class="cmt-cont">这是一个非常棒的地点，靠近商店和酒吧，非常安静的位置。</div>
-        </div>
-      </div>
-      <!--  地图  -->
-      <div ref="mapContainer" class="map"></div>
-      <!--  预定  -->
-      <button class="reserve">
-        预定
-      </button>
-    </main>
-  </div>
+	<div class="detail-container">
+		<div class="top">
+			<nav-bar>
+				<template #rightSlot>
+					<div class="nav-icon">
+						<img alt="" src="@/assets/imgs/like2.png" />
+					</div>
+				</template>
+			</nav-bar>
+		</div>
+		<!--  酒店信息  -->
+		<main class="main">
+			<div class="hotel-info">
+				<div class="left">
+					<p class="title">Grand Royal Park Hotel</p>
+					<p class="footer">
+						<span class="address">巴塞罗那,西班牙</span>
+						<img alt="" class="location" src="@/assets/imgs/location.png" />
+						<span class="cap">距离2km</span>
+					</p>
+				</div>
+				<div class="right">
+					<p class="price">￥1080</p>
+					<p class="night">/每晚</p>
+				</div>
+			</div>
+			<!--   酒店介绍   -->
+			<div class="hotel-intro">
+				<div class="title">介绍</div>
+				<div class="intro-cont">
+					<span v-if="!showMore">
+						{{ intro.length > 20 ? intro.slice(0, 20) + "..." : intro }}
+						<span style="color: #44cece" @click="changeMore">查看更多</span>
+					</span>
+					<span v-else>
+						{{ intro }}
+						<span style="color: #44cece" @click="changeMore">收起</span>
+					</span>
+				</div>
+			</div>
+			<!-- 酒店评分 -->
+			<div class="hotel-rate">
+				<div class="card-title">
+					<div class="rate">9.2</div>
+					<div class="rate-star">
+						<p class="rate-title">综合评分</p>
+						<van-rate
+							v-model="rateVal"
+							color="#13C2C2"
+							readonly
+							size="1rem"
+							void-color="#13C2C2"
+							void-icon="star-o" />
+					</div>
+				</div>
+				<div class="card-cont">
+					<div class="room-rate">
+						<p class="room">
+							<span class="text"> 房间 </span>
+							<van-slider
+								v-model="slider.room"
+								active-color="#13C2C2"
+								bar-height="0.8rem"
+								button-size="0"
+								inactive-color="transparent" />
+						</p>
+						<p class="room">
+							<span class="text"> 服务 </span>
+							<van-slider
+								v-model="slider.service"
+								active-color="#13C2C2"
+								bar-height="0.8rem"
+								button-size="0"
+								inactive-color="transparent" />
+						</p>
+						<p class="room">
+							<span class="text"> 位置 </span>
+							<van-slider
+								v-model="slider.pos"
+								active-color="#13C2C2"
+								bar-height="0.8rem"
+								button-size="0"
+								inactive-color="transparent" />
+						</p>
+						<p class="room">
+							<span class="text"> 价格 </span>
+							<van-slider
+								v-model="slider.price"
+								active-color="#13C2C2"
+								bar-height="0.8rem"
+								button-size="0"
+								inactive-color="transparent" />
+						</p>
+					</div>
+				</div>
+			</div>
+			<!-- 酒店图片 -->
+			<div class="hotel-pic">
+				<div class="title">照片</div>
+				<div class="pics">
+					<img
+						v-for="item in 10"
+						:key="item"
+						alt=""
+						src="@/assets/imgs/test-hotel.png" />
+				</div>
+			</div>
+			<!--  评论  -->
+			<div class="cmt">
+				<div class="title">
+					<div class="text">评论（25）</div>
+					<div class="view-cmts" @click="$router.push('/comment')">
+						查看全部
+					</div>
+				</div>
+				<div v-for="item in 3" :key="item" class="items">
+					<div class="cont-top">
+						<div class="users">
+							<div class="avatar">
+								<img alt="" src="@/assets/imgs/test2.png" />
+							</div>
+							<div class="infos">
+								<span class="title">Daniel Hua</span>
+								<span class="time">刚才</span>
+							</div>
+						</div>
+						<div class="rates">
+							<span>8.0</span>
+							<div>
+								<van-rate
+									v-model="rateVal"
+									color="#13C2C2"
+									readonly
+									size="1rem"
+									void-color="#13C2C2"
+									void-icon="star-o" />
+							</div>
+						</div>
+					</div>
+					<div class="cmt-cont">
+						这是一个非常棒的地点，靠近商店和酒吧，非常安静的位置。
+					</div>
+				</div>
+			</div>
+			<!--  地图  -->
+			<div ref="mapContainer" class="map"></div>
+			<!--  预定  -->
+			<button class="reserve">预定</button>
+		</main>
+	</div>
 </template>
 
 <script lang="ts" setup>
-import {onMounted, reactive, ref} from "vue";
-
+import { onMounted, reactive, ref } from "vue";
+import { useAppStore } from "@/stores/app";
+import { storeToRefs } from "pinia";
+import makerIcon from "@/assets/imgs/marker.png";
 interface SliderOpts {
-  room: number,
-  service: number
-  pos: number
-  price: number
+	room: number;
+	service: number;
+	pos: number;
+	price: number;
 }
-
-const showMore = ref<boolean>(false)
-const intro = ref<string>('Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis dolorum ipsam maiores nam qui sed, tenetur ut! Accusantium ducimus, eum expedita explicabo nostrum perferendis provident quas qui recusandae sint vitae.')
-const rateVal = ref<number>(2)
+const store = useAppStore();
+const { posiInfo } = storeToRefs(store);
+const showMore = ref<boolean>(false);
+const intro = ref<string>(
+	"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis dolorum ipsam maiores nam qui sed, tenetur ut! Accusantium ducimus, eum expedita explicabo nostrum perferendis provident quas qui recusandae sint vitae."
+);
+const rateVal = ref<number>(2);
 
 const TMap = window.TMap;
-console.log(TMap)
 const slider = reactive<SliderOpts>({
-  room: 50,
-  service: 30,
-  pos: 60,
-  price: 20
-})
-const mapContainer = ref<HTMLInputElement | null>(null)
+	room: 50,
+	service: 30,
+	pos: 60,
+	price: 20
+});
+const mapContainer = ref<HTMLInputElement | null>(null);
 
 const changeMore = () => {
-  showMore.value = !showMore.value
-}
+	showMore.value = !showMore.value;
+};
 
-const initMap = () => {
-  //定义地图中心点坐标
-  let center = new TMap.LatLng(39.984120, 116.307484)
-  //定义map变量，调用 TMap.Map() 构造函数创建地图
-  let map = new TMap.Map(mapContainer.value, {
-    center: center,//设置地图中心点坐标
-    zoom: 17.2,   //设置地图缩放级别
-  });
-}
-
+const initMap = async () => {
+	//定义地图中心点坐标
+	let coord = new TMap.LatLng(
+		posiInfo?.value?.latitude,
+		posiInfo?.value?.longitude
+	);
+	//定义map变量，调用 TMap.Map() 构造函数创建地图
+	const map = new TMap.Map(mapContainer.value, {
+		center: coord, //设置地图中心点坐标
+		zoom: 16, //设置地图缩放级别
+		viewMode: "3D",
+		offset: { x: 55, y: -130 }
+	});
+	// 定义标记物
+	const marker = new TMap.MultiMarker({
+		id: "marker-laye",
+		map: map,
+		styles: {
+			// 点标记样式
+			marker: new TMap.MarkerStyle({
+				width: 30, // 样式宽
+				height: 30, // 样式高
+				// anchor: { x: 55, y: -130 }, // 描点位置
+				src: makerIcon
+			})
+		},
+		//点标记数据数组
+		geometries: [
+			{
+				styleId: "marker",
+				// 标记位置(纬度，经度，高度)
+				position: coord,
+				id: "marker"
+			}
+		]
+	});
+	console.log(marker, ">>>>>>>>>>");
+};
+const getPosition = () => {};
+getPosition();
 !onMounted(async () => {
-  //   加载地图JavaScriptApi
-  await initMap()
-})
+	//   加载地图JavaScriptApi
+	initMap();
+});
 </script>
 
 <style lang="scss" scoped>
 .detail-container {
+	.top {
+		padding: 1rem 2rem 0;
+		width: 100%;
+		height: 13.2rem;
+		background: url("@/assets/imgs/detail-bg.png") no-repeat;
+		background-size: 60rem 57rem;
 
-  .top {
-    padding: 1rem 2rem 0;
-    width: 100%;
-    height: 13.2rem;
-    background: url('@/assets/imgs/detail-bg.png') no-repeat;
-    background-size: 60rem 57rem;
+		.nav-icon {
+			width: 4rem;
+			height: 4rem;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			background-color: #fff;
+			border-radius: 50%;
 
-    .nav-icon {
-      width: 4rem;
-      height: 4rem;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: #fff;
-      border-radius: 50%;
+			img {
+				width: 2rem;
+				height: 2rem;
+			}
+		}
+	}
 
-      img {
-        width: 2rem;
-        height: 2rem;
-      }
-    }
+	.main {
+		padding: 2.3rem 2rem 0;
+	}
 
+	.hotel-info {
+		display: flex;
+		justify-content: space-between;
 
-  }
+		.left {
+			.title {
+				width: 14rem;
+				font-size: 2.2rem;
+				font-family: PingFangSC-bold;
+				font-weight: 700;
+			}
 
-  .main {
-    padding: 2.3rem 2rem 0;
-  }
+			.footer {
+				margin-top: 1rem;
+				color: rgba(191, 191, 191, 1);
 
-  .hotel-info {
-    display: flex;
-    justify-content: space-between;
+				.location {
+					width: 1.9rem;
+					height: 1.9rem;
+					vertical-align: middle;
+					margin-left: 0.9rem;
+				}
+			}
+		}
 
-    .left {
-      .title {
-        width: 14rem;
-        font-size: 2.2rem;
-        font-family: PingFangSC-bold;
-        font-weight: 700;
-      }
+		.right {
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-end;
 
-      .footer {
-        margin-top: 1rem;
-        color: rgba(191, 191, 191, 1);
+			.price {
+				font-size: 1.6rem;
+				color: rgba(64, 64, 64, 1);
+				font-weight: 700;
+			}
 
-        .location {
-          width: 1.9rem;
-          height: 1.9rem;
-          vertical-align: middle;
-          margin-left: .9rem;
-        }
-      }
+			.night {
+				color: rgba(191, 191, 191, 1);
+				text-align: right;
+			}
+		}
 
-    }
+		padding-bottom: 1.5rem;
+		border-bottom: 1px solid rgba(245, 245, 245, 1);
+	}
 
-    .right {
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
+	.hotel-intro {
+		margin-top: 1.2rem;
 
-      .price {
-        font-size: 1.6rem;
-        color: rgba(64, 64, 64, 1);
-        font-weight: 700;
-      }
+		.title {
+			font-size: 1.4rem;
+			color: rgba(191, 191, 191, 1);
+		}
 
-      .night {
-        color: rgba(191, 191, 191, 1);
-        text-align: right;
-      }
-    }
+		.intro-cont {
+			font-size: 1.4rem;
+			margin-top: 1.2rem;
+		}
+	}
 
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid rgba(245, 245, 245, 1);
-  }
+	.hotel-rate {
+		margin-top: 2.3rem;
+		height: 19.2rem;
+		box-shadow: 0rem 0.4rem 1rem 0rem rgba(0, 0, 0, 0.06);
+		border-radius: 2rem;
+		padding: 1rem 1.9rem 0;
 
-  .hotel-intro {
-    margin-top: 1.2rem;
+		.card-title {
+			display: flex;
+			align-items: flex-end;
+		}
 
-    .title {
-      font-size: 1.4rem;
-      color: rgba(191, 191, 191, 1);
-    }
+		.rate {
+			height: 3.6rem;
+			font-size: 3.6rem;
+			color: rgba(19, 194, 194, 1);
+			font-weight: 700;
+			margin-right: 0.9rem;
+		}
 
-    .intro-cont {
-      font-size: 1.4rem;
-      margin-top: 1.2rem;
-    }
-  }
+		.rate-star {
+			height: 100%;
+		}
 
-  .hotel-rate {
-    margin-top: 2.3rem;
-    height: 19.2rem;
-    box-shadow: 0rem .4rem 1rem 0rem rgba(0, 0, 0, 0.06);
-    border-radius: 2rem;
-    padding: 1rem 1.9rem 0;
+		.room-rate {
+			.room {
+				display: flex;
+				align-items: center;
+				margin-top: 0.8rem;
 
-    .card-title {
-      display: flex;
-      align-items: flex-end;
-    }
+				.text {
+					font-size: 1.4rem;
+					width: 5rem;
+					padding-right: 0.9rem;
+					text-align: center;
+				}
 
-    .rate {
-      height: 3.6rem;
-      font-size: 3.6rem;
-      color: rgba(19, 194, 194, 1);
-      font-weight: 700;
-      margin-right: .9rem;
-    }
+				.van-slider {
+					flex: 1;
+				}
+			}
+		}
+	}
 
-    .rate-star {
-      height: 100%;
-    }
+	.hotel-pic {
+		margin-top: 3rem;
 
-    .room-rate {
+		.title {
+			color: rgba(145, 145, 145, 1);
+			font-size: 1.4rem;
+			margin-bottom: 1.4rem;
+		}
 
-      .room {
-        display: flex;
-        align-items: center;
-        margin-top: .8rem;
+		.pics {
+			overflow-x: scroll;
+			display: flex;
 
-        .text {
-          font-size: 1.4rem;
-          width: 5rem;
-          padding-right: .9rem;
-          text-align: center;
-        }
+			&::-webkit-scrollbar {
+				display: none;
+			}
 
-        .van-slider {
-          flex: 1
-        }
-      }
-    }
-  }
+			img {
+				margin-left: 1.7rem;
 
-  .hotel-pic {
-    margin-top: 3rem;
+				&:first-child {
+					margin-left: 0;
+				}
 
+				display: inline-block;
+				width: 9rem;
+				height: 9rem;
+				border-radius: 2rem;
+			}
+		}
+	}
 
-    .title {
-      color: rgba(145, 145, 145, 1);
-      font-size: 1.4rem;
-      margin-bottom: 1.4rem;
-    }
+	.cmt {
+		margin: 3rem 0 1.3rem;
 
-    .pics {
-      overflow-x: scroll;
-      display: flex;
+		.title {
+			display: flex;
+			justify-content: space-between;
+			font-size: 1.4rem;
+			margin-bottom: 1.3rem;
 
-      &::-webkit-scrollbar {
-        display: none;
-      }
+			.text {
+				color: rgba(145, 145, 145, 1);
+			}
 
-      img {
-        margin-left: 1.7rem;
+			.view-cmts {
+				color: rgba(19, 194, 194, 1);
+			}
+		}
 
-        &:first-child {
-          margin-left: 0;
-        }
+		.items {
+			padding: 1.9rem 0 3.1rem;
+			border-top: 0.1rem solid rgba(245, 245, 245, 1);
 
-        display: inline-block;
-        width: 9rem;
-        height: 9rem;
-        border-radius: 2rem;
-      }
-    }
-  }
+			//&:first-child {
+			//  border: 1px solid red;
+			//}
 
-  .cmt {
-    margin: 3rem 0 1.3rem;
+			.cont-top {
+				display: flex;
+				justify-content: space-between;
+				align-items: flex-end;
 
-    .title {
-      display: flex;
-      justify-content: space-between;
-      font-size: 1.4rem;
-      margin-bottom: 1.3rem;
+				.rates {
+					text-align: right;
 
-      .text {
-        color: rgba(145, 145, 145, 1);
-      }
+					span {
+						font-size: 1.4rem;
+					}
+				}
+			}
 
-      .view-cmts {
-        color: rgba(19, 194, 194, 1);
-      }
-    }
+			.users {
+				display: flex;
 
-    .items {
-      padding: 1.9rem 0 3.1rem;
-      border-top: .1rem solid rgba(245, 245, 245, 1);
+				.avatar {
+					width: 5rem;
+					height: 5rem;
+					border-radius: 50%;
+					margin-right: 1rem;
+					overflow: hidden;
 
-      //&:first-child {
-      //  border: 1px solid red;
-      //}
+					img {
+						width: 100%;
+						height: 100%;
+					}
+				}
 
-      .cont-top {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-end;
+				.infos {
+					display: flex;
+					flex-direction: column;
+					justify-content: space-evenly;
 
-        .rates {
-          text-align: right;
+					.title {
+						font-size: 1.6rem;
+						margin: 0;
+					}
 
-          span {
-            font-size: 1.4rem;
-          }
-        }
-      }
+					.time {
+						color: rgba(191, 191, 191, 1);
+						font-size: 1.2rem;
+					}
+				}
+			}
 
-      .users {
-        display: flex;
+			.cmt-cont {
+				margin-top: 1.3rem;
+				color: rgba(145, 145, 145, 1);
+				font-size: 1.4rem;
+			}
+		}
+	}
 
-        .avatar {
-          width: 5rem;
-          height: 5rem;
-          border-radius: 50%;
-          margin-right: 1rem;
-          overflow: hidden;
+	.map {
+		height: 23rem;
+		background-color: pink;
+		margin: 0 -2rem;
+	}
 
-          img {
-            width: 100%;
-            height: 100%;
-          }
-        }
-
-        .infos {
-          display: flex;
-          flex-direction: column;
-          justify-content: space-evenly;
-
-          .title {
-            font-size: 1.6rem;
-            margin: 0;
-          }
-
-          .time {
-            color: rgba(191, 191, 191, 1);
-            font-size: 1.2rem;
-          }
-        }
-      }
-
-
-      .cmt-cont {
-        margin-top: 1.3rem;
-        color: rgba(145, 145, 145, 1);
-        font-size: 1.4rem;
-      }
-    }
-  }
-
-  .map {
-    height: 23rem;
-    background-color: pink;
-    margin: 0 -2rem;
-  }
-
-  .reserve {
-    @include loginStyle;
-    height: 4.4rem;
-    margin-top: 3.8rem;
-    font-size: 1.4rem;
-    margin-bottom: 4.1rem;
-  }
+	.reserve {
+		@include loginStyle;
+		height: 4.4rem;
+		margin-top: 3.8rem;
+		font-size: 1.4rem;
+		margin-bottom: 4.1rem;
+	}
 }
 </style>
