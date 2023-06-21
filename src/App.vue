@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: 
  * @Date: 2023-05-29 13:55:47
- * @LastEditTime: 2023-06-16 14:34:16
+ * @LastEditTime: 2023-06-21 17:14:59
  * @LastEditors: Please set LastEditors
  * @Reference: 
 -->
@@ -10,21 +10,33 @@
 import { useAppStore } from "./stores/app";
 import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
+import { transPos } from "@/apis/app";
 
 const store = useAppStore();
 const { hasTabbar, activeTab, posiInfo } = storeToRefs(store);
 const $router = useRouter();
-
+const getClientHg = document.documentElement.clientHeight / 10;
 //获取经纬度
 navigator.geolocation.getCurrentPosition(
-	(pos) => {
+	async (pos) => {
+		// 转换经纬度
+		const lat = {
+			latitude: pos.coords.latitude,
+			longitude: pos.coords.longitude
+		};
+		const { response } = await transPos({
+			posiInfo: lat,
+			mapKeys: import.meta.env.HT_MAP_KEY
+		});
+		const coords: any = response.data.locations[0] || {};
 		store.$patch({
 			posiInfo: {
-				latitude: pos.coords.latitude,
-				longitude: pos.coords.longitude
+				latitude: coords?.lat,
+				longitude: coords?.lng
 			}
 		});
-		console.log(posiInfo, ">>>>>>>>>>");
+
+		console.log(response.data);
 	},
 	(err) => {
 		console.log(err);
@@ -36,7 +48,9 @@ const handlerChange = () => {
 </script>
 <template>
 	<div class="root">
-		<router-view class="pages"></router-view>
+		<router-view
+			class="pages"
+			:style="{ height: getClientHg + 'rem' }"></router-view>
 		<van-tabbar
 			v-if="hasTabbar"
 			v-model="activeTab"
@@ -52,7 +66,6 @@ const handlerChange = () => {
 <style scoped>
 .root {
 	width: 37.5rem;
-	height: 81.2rem;
 	--van-tabbar-item-active-color: #13c2c2;
 	--van-tabbar-item-active-background: transparent;
 }

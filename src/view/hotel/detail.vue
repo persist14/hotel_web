@@ -144,7 +144,9 @@
 				</div>
 			</div>
 			<!--  地图  -->
-			<div ref="mapContainer" class="map"></div>
+			<div class="map-box" @click="mapPage">
+				<div ref="mapContainer" class="map"></div>
+			</div>
 			<!--  预定  -->
 			<button class="reserve">预定</button>
 		</main>
@@ -156,6 +158,7 @@ import { onMounted, reactive, ref } from "vue";
 import { useAppStore } from "@/stores/app";
 import { storeToRefs } from "pinia";
 import makerIcon from "@/assets/imgs/marker.png";
+import { useRouter } from "vue-router";
 interface SliderOpts {
 	room: number;
 	service: number;
@@ -169,7 +172,7 @@ const intro = ref<string>(
 	"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis dolorum ipsam maiores nam qui sed, tenetur ut! Accusantium ducimus, eum expedita explicabo nostrum perferendis provident quas qui recusandae sint vitae."
 );
 const rateVal = ref<number>(2);
-
+const $router = useRouter();
 const TMap = window.TMap;
 const slider = reactive<SliderOpts>({
 	room: 50,
@@ -194,18 +197,27 @@ const initMap = async () => {
 		center: coord, //设置地图中心点坐标
 		zoom: 16, //设置地图缩放级别
 		viewMode: "3D",
+		draggable: false, // 拖拽
+		scrollable: false, // 缩放
 		offset: { x: 55, y: -130 }
 	});
+	// 添加点击事件
+	map._events.click = () => {
+		$router.push("/maps");
+	};
+
 	// 定义标记物
-	const marker = new TMap.MultiMarker({
+	new TMap.MultiMarker({
 		id: "marker-laye",
 		map: map,
 		styles: {
 			// 点标记样式
 			marker: new TMap.MarkerStyle({
+				position: "absolute",
 				width: 30, // 样式宽
 				height: 30, // 样式高
-				// anchor: { x: 55, y: -130 }, // 描点位置
+				// anchor: { x: 16, y: 32 },
+				anchor: { x: 55, y: -130 }, // 描点位置
 				src: makerIcon
 			})
 		},
@@ -219,10 +231,7 @@ const initMap = async () => {
 			}
 		]
 	});
-	console.log(marker, ">>>>>>>>>>");
 };
-const getPosition = () => {};
-getPosition();
 !onMounted(async () => {
 	//   加载地图JavaScriptApi
 	initMap();
