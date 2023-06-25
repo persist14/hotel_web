@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: 
  * @Date: 2023-05-31 10:10:12
- * @LastEditTime: 2023-06-08 17:12:25
+ * @LastEditTime: 2023-06-25 17:15:40
  * @LastEditors: Please set LastEditors
  * @Reference: 
 -->
@@ -88,9 +88,9 @@
 			v-model:show="showRoomModal"
 			round
 			:style="{
-				padding: '0 26rem',
-				width: '336rem',
-				height: '376rem'
+				padding: '0 2.6rem',
+				width: '100%',
+				height: '37.6rem'
 			}">
 			<!-- 房间数 -->
 			<div class="popup-card">
@@ -482,7 +482,7 @@ const getList = (page: number) => {
 			border-bottom-left-radius: 0;
 		}
 	}
-	:deep(.popup-card) {
+	.popup-card {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;

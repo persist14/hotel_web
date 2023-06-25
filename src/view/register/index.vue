@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: 
  * @Date: 2023-06-02 15:14:26
- * @LastEditTime: 2023-06-02 17:06:52
+ * @LastEditTime: 2023-06-25 16:54:13
  * @LastEditors: Please set LastEditors
  * @Reference: 
 -->
@@ -34,7 +34,7 @@
 		<van-checkbox v-model="checkedAgree" shape="square" checked-color="#13C2C2"
 			>《注册协议》</van-checkbox
 		>
-		<div class="footer">已有账号？<span>登录</span></div>
+		<div class="footer">已有账号？<span @click="$router.back()" >登录</span></div>
 		<van-notify v-model:show="registerModal" type="success">
 			<van-icon name="bell" style="margin-right: 0.4rem" />
 			<span>注册成功</span>
@@ -47,7 +47,8 @@ import { ref, reactive } from "vue";
 import navBar from "@/components/navBar.vue";
 import cusInput from "@/components/cusInput.vue";
 import { UserOpts } from "@/models/login";
-import { register } from "@/apis/user";
+import { useLoginStore } from "@/stores/login";
+const loginStore = useLoginStore()
 const pwdType = ref<string>("password");
 const checkedAgree = ref<boolean>(false);
 const registerInfo = reactive<UserOpts>({
@@ -72,7 +73,7 @@ const getPwdVal = (val: string) => {
 };
 // 提交注册
 const submit = async () => {
-	const regist = await register(registerInfo);
+	const regist = await loginStore.regis(registerInfo);
 	if (regist.success) {
 		(registerModal.value = true),
 			setTimeout(() => {

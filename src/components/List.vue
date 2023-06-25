@@ -2,7 +2,7 @@
  * @Description:
  * @Author:
  * @Date: 2023-06-08 10:40:02
- * @LastEditTime: 2023-06-08 16:56:17
+ * @LastEditTime: 2023-06-25 09:57:34
  * @LastEditors: Please set LastEditors
  * @Reference:
 -->
@@ -15,7 +15,7 @@
 				finished-text="没有更多了"
 				@load="onLoad">
 				<van-cell v-for="item in props.list" :key="item.title">
-					<div class="benefit-items">
+					<div class="benefit-items" @click="toDetils(item.title)" >
 						<div class="benefit-left">
 							<img src="@/assets/imgs/test3.png" alt="" />
 						</div>
@@ -53,11 +53,13 @@
 
 <script setup lang="ts">
 import { reactive, ref } from "vue";
+import { useRouter } from "vue-router";
 interface ListOpts {
 	list: ListItemOpts[];
 	total: number;
 	loaddingStatus: boolean;
-  refreshStatus: boolean
+    refreshStatus: boolean;
+    detailUrl?: string
 }
 interface ListItemOpts {
 	title: string;
@@ -70,6 +72,7 @@ interface ListEmitEVents {
 	(e: "loadDatas", page: number, refresh: boolean | undefined): void;
 }
 const props = defineProps<ListOpts>();
+const $router = useRouter()
 const emits = defineEmits<ListEmitEVents>();
 const listOpts = reactive({
 	finished: false,
@@ -82,7 +85,7 @@ const onLoad = async (re?:boolean) => {
 	// 让父组件请求数据
 	emits("loadDatas", page.value, re);
   // listOpts.refreshing = false
-	props.list.length > 30 ? (listOpts.finished = true) : "";
+	props.list.length > 10 ? (listOpts.finished = true) : "";
 };
 const onRefresh = () => {
 	// 清空列表数据
@@ -90,6 +93,14 @@ const onRefresh = () => {
 	// 重新加载数据
     onLoad(true)
 };
+const toDetils = (id: string) => {
+    $router.push({
+        path: props.detailUrl,
+        query: {
+            id
+        }
+    })
+}
 </script>
 
 <style scoped lang="scss">

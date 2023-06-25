@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: 
  * @Date: 2023-05-31 08:41:08
- * @LastEditTime: 2023-06-02 14:23:25
+ * @LastEditTime: 2023-06-25 15:02:48
  * @LastEditors: Please set LastEditors
  * @Reference: 
 -->
@@ -12,7 +12,8 @@
 			<nav-bar> </nav-bar>
 		</div>
 		<p class="login-text">登录</p>
-		<div class="valid-alert">账号或密码错误</div>
+		<div class="valid-alert" v-if="errMsg">账号或密码错误</div>
+		<div class="valid-alert" v-else></div>
 		<div class="card">
 			<!-- 用户输入区域 -->
 			<div class="input-card">
@@ -40,12 +41,12 @@
 <script setup lang="ts">
 import cusInput from "@/components/cusInput.vue";
 import navBar from "@/components/navBar.vue";
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import { InputOpts, UserOpts } from "@/models/login";
-import { login } from "@/apis/user";
+import { useLoginStore }  from '@/stores/login'
 const $router = useRouter();
-
+const loginStore = useLoginStore()
 // 用户名
 const userInputOpts = reactive<InputOpts>({
 	types: "text",
@@ -60,6 +61,7 @@ const userPasswordOpts = reactive<InputOpts>({
 	preffix: false,
 	prompt: "请输入密码"
 });
+const errMsg = ref<boolean>(false);
 // 修改input类型
 const updateInputType = () => {
 	userPasswordOpts.types =
@@ -83,7 +85,11 @@ const getPassword = (val: string) => {
 
 // 登录按钮
 const submit = async () => {
-	await login(loginInfo);
+	const res = await loginStore.login(loginInfo);
+    console.log(res);
+    if(res.code === 200 && res.success) {
+        $router.push('/dashboard')
+    }
 };
 </script>
 

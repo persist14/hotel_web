@@ -168,6 +168,7 @@ interface SliderOpts {
 const store = useAppStore();
 const { posiInfo } = storeToRefs(store);
 const showMore = ref<boolean>(false);
+
 const intro = ref<string>(
 	"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis dolorum ipsam maiores nam qui sed, tenetur ut! Accusantium ducimus, eum expedita explicabo nostrum perferendis provident quas qui recusandae sint vitae."
 );

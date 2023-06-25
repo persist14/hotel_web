@@ -13,13 +13,15 @@ type AppStore = {
     posiInfo?: {
         latitude?: number,
         longitude?: number
-    }
+    },
+    token: string
 }
 export const useAppStore = defineStore('app', {
     state: (): AppStore => ({
         hasTabbar: false,
         activeTab: 'found',
-        posiInfo: {}
+        posiInfo: {},
+        token: ''
     }),
     actions: {
         updateShowTab(params: boolean) {

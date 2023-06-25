@@ -8,8 +8,8 @@
 			title-inactive-color="#919191"
 			line-height="0">
 			<van-tab title="最近预定" name="prev">
-				<div class="items">
-					<span>12 3月 - 22 3月, 1间 - 2人</span>
+				<div class="items" v-for="item in 10" :key="item">
+					<span class="times">12 3月 - 22 3月, 1间 - 2人</span>
 					<div class="roomInfo">
 						<div class="image">
 							<img src="@/assets/imgs/test.png" alt="" />
@@ -22,22 +22,76 @@
 								<span>吉野家民宿</span>
 								<span>￥1080</span>
 							</div>
+							<div class="content">
+								<div class="location">
+									<span>巴塞罗那,西班牙</span>
+									<span>
+										<img src="@/assets/imgs/location.png" alt="" />
+										距离2km
+									</span>
+								</div>
+								<div>/每晚</div>
+							</div>
+							<div class="rate">
+								<van-rate
+									v-model="listRate"
+									size="1.5rem"
+									color="#13C2C2"
+									void-icon="star-o"
+									void-color="#13C2C2"
+									readonly />
+								<span>80 条评论</span>
+							</div>
 						</div>
 					</div>
 				</div>
 			</van-tab>
 			<van-tab title="已完成" name="complete">内容 2</van-tab>
-			<van-tab title="喜欢" name="like">内容 3</van-tab>
+			<van-tab title="喜欢" name="like">
+				<List
+					:list="xData.list"
+					:total="xData.total"
+					detail-url="/hotelcover"
+					:loadding-status="xData.loadding"
+					@load-datas="getList"></List>
+			</van-tab>
 		</van-tabs>
 	</div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, reactive } from "vue";
+import listImg from "@/assets/imgs/test2.png";
 const activeIndex = ref<string>("prev");
-
-const handleClike = (text: "prev" | "complete" | "like") => {
-	activeIndex.value = text;
+const listRate = ref<number>(3.5);
+// 列表数据定义
+const xData = reactive({
+	list: [
+		{
+			title: "标题",
+			address: "陕西省西安市",
+			cap: "2",
+			price: 1000,
+			img: listImg
+		}
+	],
+	total: 20,
+	loadding: ref<boolean>(false)
+});
+// 获取数据
+const getList = (page: number) => {
+	console.log(page, "分页");
+	xData.loadding = true;
+	setTimeout(() => {
+		xData.list.push({
+			title: "测试",
+			address: "科技路",
+			cap: "3",
+			price: 2000,
+			img: "xxx"
+		});
+		xData.loadding = false;
+	}, 3000);
 };
 </script>
 <style scoped lang="scss">
@@ -84,6 +138,9 @@ const handleClike = (text: "prev" | "complete" | "like") => {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+		.times {
+			padding-bottom: 1.4rem;
+		}
 		.roomInfo {
 			width: 33.6rem;
 			height: 27.5rem;
@@ -109,12 +166,36 @@ const handleClike = (text: "prev" | "complete" | "like") => {
 				}
 			}
 			.infos {
-				.title {
-					padding: 1rem 1.7rem 0;
+				height: 9.5rem;
+				padding: 1.5rem 1.7rem 1.5rem;
+				display: flex;
+				flex-direction: column;
+				justify-content: space-between;
+				.title,
+				.content {
+					font-size: 1.8rem;
 					display: flex;
 					justify-content: space-between;
-					span:first-child {
-						font-weight: 700;
+					font-weight: 700;
+				}
+				.content {
+					font-size: 1.4rem;
+					height: 2rem;
+					.location {
+						span {
+							color: #bfbfbf;
+						}
+						img {
+							width: 1.9rem;
+							height: 1.9rem;
+							vertical-align: middle;
+						}
+					}
+				}
+				.rate {
+					span {
+						color: #bfbfbf;
+						padding-left: 0.8rem;
 					}
 				}
 			}

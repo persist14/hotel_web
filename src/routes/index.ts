@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: 
  * @Date: 2023-05-29 17:20:57
- * @LastEditTime: 2023-05-31 15:41:58
+ * @LastEditTime: 2023-06-25 16:29:05
  * @LastEditors: Please set LastEditors
  * @Reference: 
  */
@@ -66,7 +66,18 @@ router.beforeEach((to, from, next) => {
         default:
             store.updateItems('activeTab', '')
     }
+    // 限制路由
+    const token = localStorage.getItem('token')
+    const whiteList = ['/login', '/register']
 
+    if (!whiteList.includes(to.path)) {
+        console.log(token);
+
+        token ? next() : next({
+            path: '/login'
+        })
+        return
+    }
     next()
 })
 export default router

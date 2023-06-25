@@ -3,9 +3,9 @@ import { UserOpts } from '@/models/login'
 import { responseOpts } from '@/models/common'
 
 // 登录
-export const login = async (data: UserOpts) => {
+export const login = async (data: UserOpts): Promise<responseOpts<any>> => {
     const response = await http.post('/login', data)
-    console.log(response);
+    return response.data
 }
 
 // 注册
